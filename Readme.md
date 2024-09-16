@@ -7,3 +7,4 @@ Videos used are obtained from www.pexels.com and www.pixabay.com
 Required packages
 1. Opencv-python
 2. Mediapipe
+3. Pycaw (For Volume Hand Control)
