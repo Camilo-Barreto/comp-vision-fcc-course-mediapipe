@@ -8,6 +8,7 @@ class handDetector():
         self.maxHands = maxHands
         self.detectionCon = detectionCon
         self.trackCon = trackCon
+        self.tipIds = [4, 8, 12, 16, 20]
 
         # Initialisations
         self.mpHands = mp.solutions.hands
@@ -32,7 +33,7 @@ class handDetector():
         return img
     
     def findPosition(self, img, handNo=0, draw=True):
-        lmList = []
+        self.lmList = []
 
         if self.results.multi_hand_landmarks:
             myHand = self.results.multi_hand_landmarks[handNo]
@@ -42,12 +43,35 @@ class handDetector():
                 # Height, width, channels 
                 h, w, c = img.shape
                 cx, cy = int(lm.x * w), int(lm.y * h)
-                lmList.append([id, cx, cy])
+                self.lmList.append([id, cx, cy])
 
                 if draw:
                     cv2.circle(img, (cx, cy), 7, (255, 0, 0), cv2.FILLED)
 
-        return lmList
+        return self.lmList
+    
+    def fingersUp(self):
+        fingers = []
+        # If tip of finger y cord is less than middle joint y cord, the finger is open
+        # The img pixels y starts from the top at 0 and increments to the bottom
+        # Detection points is 2 less than the tip. Eg. for 8 (index tip) detection point is 6
+        
+        # Special case for thumb, check direction of finger whether left or right of -1 point
+        # Use < when thumb is on the left side of the video and > for the opposite
+        if self.lmList[self.tipIds[0]][1] < self.lmList[self.tipIds[0]-1][1]:
+            fingers.append(1)
+        else:
+            fingers.append(0)
+
+        for id in range(1, 5):
+            # Detection points is 2 less than the tip. Eg. for 8 (index tip) detection point is 6
+            if self.lmList[self.tipIds[id]][2] < self.lmList[self.tipIds[id]-2][2]:
+                fingers.append(1)
+            else:
+                fingers.append(0)
+
+        return fingers
+
 
 def main():
     # Varibles to detect frame rate. Previous Time and Current Time
