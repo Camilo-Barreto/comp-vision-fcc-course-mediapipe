@@ -119,7 +119,7 @@ while True:
     img = cv2.bitwise_and(img, imgInv)
     # OR to add the color from imgCanvas to img
     img = cv2.bitwise_or(img, imgCanvas)
-    cv2.imshow("Inv", imgInv)
+    # cv2.imshow("Inv", imgInv)
 
     # Overlay the header
     img[0:150, 0:1280] = header
@@ -133,6 +133,6 @@ while True:
 
     cv2.putText(img, f'FPS: {int(fps)}', (10, 180), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 0, 0), 2)
     cv2.imshow("Image", img)
-    cv2.imshow("Canvas", imgCanvas)
+    #cv2.imshow("Canvas", imgCanvas)
     if cv2.waitKey(1) & 0xFF==ord('q'):
         break
