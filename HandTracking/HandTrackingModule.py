@@ -1,6 +1,7 @@
 import cv2
 import mediapipe as mp
 import time
+import math
 
 class handDetector():
     def __init__(self, mode=False, maxHands=2, detectionCon=0.5, trackCon=0.5):
@@ -58,7 +59,9 @@ class handDetector():
         
         # Special case for thumb, check direction of finger whether left or right of -1 point
         # Use < when thumb is on the left side of the video and > for the opposite
-        if self.lmList[self.tipIds[0]][1] < self.lmList[self.tipIds[0]-1][1]:
+
+        # USE > for all projects. USE < for Virtual Painter as the image is flipped
+        if self.lmList[self.tipIds[0]][1] > self.lmList[self.tipIds[0]-1][1]:
             fingers.append(1)
         else:
             fingers.append(0)
@@ -71,6 +74,21 @@ class handDetector():
                 fingers.append(0)
 
         return fingers
+
+
+    def findDistance(self, img, p1, p2, draw=True):
+        x1, y1 = self.lmList[p1][1], self.lmList[p1][2]
+        x2, y2 = self.lmList[p2][1], self.lmList[p2][2]
+        cx, cy = (x1 + x2)//2, (y1 + y2)//2
+
+        if draw:
+            cv2.circle(img, (x1, y1), 15, (255, 0, 255), cv2.FILLED)
+            cv2.circle(img, (x2, y2), 15, (255, 0, 255), cv2.FILLED)
+            cv2.line(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
+            cv2.circle(img, (cx, cy), 15, (255, 0, 255), cv2.FILLED)
+
+        length = math.hypot(x2-x1, y2-y1)
+        return length, img, [x1, y1, x2, y2, cx, cy]
 
 
 def main():
