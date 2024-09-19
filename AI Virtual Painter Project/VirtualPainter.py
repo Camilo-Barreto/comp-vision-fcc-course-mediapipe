@@ -8,6 +8,7 @@ sys.path.append("HandTracking")
 import HandTrackingModule as htm # type: ignore
 
 ####################
+# NOTE: Since the camera is flipped change the htm find fingers function to < if you need to use thumb
 brushThickness = 7
 eraserThickness = 100
 ####################
