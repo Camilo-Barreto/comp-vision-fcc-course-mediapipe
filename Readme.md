@@ -10,3 +10,4 @@ Required packages
 
 Additional packages for functionality
 1. Pycaw (For Volume Hand Control)
+2. Autopy (For AI Virtual Mouse)
